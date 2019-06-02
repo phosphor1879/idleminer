@@ -1,0 +1,17 @@
+{
+  "name": "idleminer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@paulcbetts/system-idle-time": "^1.0.5",
+    "cross-spawn": "^6.0.5",
+    "minimist": "^1.2.0"
+  }
+}

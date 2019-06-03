@@ -1,2 +1,4 @@
 #!/bin/bash
-/usr/bin/xterm -T idleminer -e "sudo /usr/bin/node /home/keyvan/code/idleminer/index.js"
+if ! ps aux | grep xterm | grep idleminer; then
+  /usr/bin/xterm -iconic -T idleminer -e "sudo /usr/bin/node /home/keyvan/code/idleminer/index.js"
+fi

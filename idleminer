@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/xterm -T idleminer -e "sudo /usr/bin/node /home/keyvan/code/idleminer/index.js"

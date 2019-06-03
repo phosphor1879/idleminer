@@ -3,6 +3,8 @@ const system = require('@paulcbetts/system-idle-time');
 const args = require('minimist')(process.argv);
 
 let miner = null;
+let minTime = 60000;
+let minUtil = 25;
 
 async function run(cmd, args) {
   return new Promise((resolve, reject) => {
@@ -38,15 +40,33 @@ async function startMiner() {
   });
 }
 
+async function getUtil(gpu) {
+  return new Promise((resolve, reject)=>{
+    let proc = spawn('/usr/bin/nvidia-smi', ['--query-gpu=utilization.gpu', '--format=csv']);
+    let buf = "";
+    proc.stdout.on('data', (data)=> buf+=data.toString());
+    proc.on('error', reject);
+    proc.on('close', ()=>{
+      let lines = buf.split('\n');
+      lines.shift(); // drop header line
+      resolve(parseInt(lines[gpu]));
+    });
+  });
+}
+
 async function loop() {
-  let t = system.getIdleTime();
-  if (miner === null && t > 5000) {
-    try {
-      await startMiner()
-    } catch(err) {
-      console.log(err);
+  let idleTime = system.getIdleTime();
+  if (miner === null && idleTime > minTime) {
+    let util = await getUtil(0);
+    if (util < minUtil) {
+      console.log('utilization is low, starting miner');
+      try {
+        await startMiner()
+      } catch(err) {
+        console.log(err);
+      }
     }
-  } else if (miner !== null && t <= 5000) {
+  } else if (miner !== null && idleTime <= minTime) {
     console.log('killing miner');
     miner.kill();
   }

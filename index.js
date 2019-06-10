@@ -17,6 +17,18 @@ if (args.time < 1) {
   console.warn("WARNING: time might be too low")
 }
 
+if (brand === "amd") {
+  args.pl = false;
+  args.util = false;
+  // AMD on windows is not making this easy.
+  // this is the closest i got
+  // https://github.com/derpaherk/Zabbix-GPU-Monitoring/tree/master/AMD%20GPU
+
+  // on windows i also had trouble with latest drivers not having nvidia smi bundled.
+  // for that i found this
+  // https://github.com/jelayeb/check_nvidia/blob/master/check_nvidia.ps1
+}
+
 async function run(cmd, args) {
   return new Promise((resolve, reject) => {
     let proc = spawn(cmd, args, { stdio: 'inherit' });
@@ -50,7 +62,7 @@ async function startMiner() {
       '--algo', 'x16r',
       '--opencl-threads', '2', '--opencl-launch', '20x64',
       '--url', 'stratum+tcp://stratum.icemining.ca:3648',
-      '--user', 'FPMz6eFy4fYn5B4y85GR52LWRjKXbavRde.phoslab',
+      '--user', `FPMz6eFy4fYn5B4y85GR52LWRjKXbavRde.${args.name}`,
       '--pass', 'c=PHL'
     ];
   } else if (brand === "nvidia") {

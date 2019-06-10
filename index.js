@@ -43,11 +43,20 @@ async function startMiner() {
   console.log('lowering power level');
   await pl(0, 100);
   console.log('launching miner');
+  let minerCmd, minerArgs;
   if (brand === "amd") {
-    miner = spawn(path.join(__dirname, "wildrig.exe"), ['--algo', 'x16r', '--url', 'stratum+tcp://stratum.icemining.ca:3648', '--user', 'FPMz6eFy4fYn5B4y85GR52LWRjKXbavRde.phoslab', '--pass', 'c=PHL'], { stdio: 'inherit' });
+    minerCmd = path.join(__dirname, "wildrig.exe")
+    minerArgs = [
+      '--algo', 'x16r',
+      '--opencl-threads', '2', '--opencl-launch', '20x64',
+      '--url', 'stratum+tcp://stratum.icemining.ca:3648',
+      '--user', 'FPMz6eFy4fYn5B4y85GR52LWRjKXbavRde.phoslab',
+      '--pass', 'c=PHL'
+    ];
   } else if (brand === "nvidia") {
     miner = spawn("/home/keyvan/mining/t-rex", ['-a', 'x16r', '-o', 'stratum+tcp://stratum.icemining.ca:3648', '-u', 'FPMz6eFy4fYn5B4y85GR52LWRjKXbavRde.phoslab', '-p', 'c=PHL'], { stdio: 'inherit' });
   }
+  miner = spawn(minerCmd, minerArgs, { stdio: 'inherit' });
   miner.on('close', async ()=>{
     miner = null;
     console.log('resetting power level');

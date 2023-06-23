@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@paulcbetts/system-idle-time": "^1.0.5",
-    "cross-spawn": "^6.0.5",
+    "cross-spawn": "^7.0.3",
     "minimist": "^1.2.0"
   }
 }
